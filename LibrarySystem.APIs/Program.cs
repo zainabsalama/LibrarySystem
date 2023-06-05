@@ -6,6 +6,7 @@ using LibrarySystem.DAL;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 // Add services to the container.
 
@@ -19,8 +20,17 @@ builder.Services.AddScoped<IBooksRepo,BooksRepo>();
 builder.Services.AddScoped<IBookManagers, BookManagers>();
 builder.Services.AddScoped<IBorrowingRepo, BorrowingRepo>();
 builder.Services.AddScoped<IBorrowingManager, BorrowingManagers>();
-builder.Services.AddScoped<IRetrievalRepo, RetrievalRepo>();
-builder.Services.AddScoped<IRetrievalManager, RetrievalManager>();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.AllowAnyOrigin()
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                      });
+});
 
 
 var app = builder.Build();
@@ -33,6 +43,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors(MyAllowSpecificOrigins);
 
 app.UseAuthorization();
 

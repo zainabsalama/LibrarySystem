@@ -23,7 +23,6 @@ public class BookController : ControllerBase
     public ActionResult<List<BookReadDto>> GetAll()
     {
         return _bookManagers.GetAll().ToList();
-
     }
 
     [HttpGet]
@@ -44,7 +43,7 @@ public class BookController : ControllerBase
         var newId = _bookManagers.Add(bookDto);
         return CreatedAtAction(nameof(GetById),
             new {id=newId},
-            new GeneralResponse("Doctor was Added"));
+            new GeneralResponse("Book was Added"));
     }
     [HttpPut]
     public ActionResult Update(BookUpdateDto bookDto)

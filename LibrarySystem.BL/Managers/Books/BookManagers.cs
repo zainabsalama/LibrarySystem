@@ -22,6 +22,8 @@ public class BookManagers : IBookManagers
     {
         var book = new Book
         {
+            Id= bookAddDto.Id,
+            Code = bookAddDto.Code,
             Title = bookAddDto.Title,
             NumOfCopies = bookAddDto.NumOfCopies,
         };
@@ -47,6 +49,7 @@ public class BookManagers : IBookManagers
         return BooksFromDb.Select(d => new BookReadDto
         {
             Id = d.Id,
+            Code = d.Code,
             Title = d.Title,
             NumOfCopies = d.NumOfCopies,
         }) ;
@@ -61,7 +64,8 @@ public class BookManagers : IBookManagers
         }
         return new BookReadDto
         { 
-            Id = GetBookFromDb.Id,
+            Id=GetBookFromDb.Id,
+            Code=GetBookFromDb.Code,
             Title = GetBookFromDb.Title,
             NumOfCopies= GetBookFromDb.NumOfCopies
         };

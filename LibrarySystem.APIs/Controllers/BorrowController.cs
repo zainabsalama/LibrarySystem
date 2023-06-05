@@ -1,7 +1,6 @@
 ﻿using LibrarySystem.BL;
 using LibrarySystem.BL.Dtos;
-using LibrarySystem.DAL;
-using Microsoft.AspNetCore.Http;
+using LibrarySystem.BL.Dtos.General;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibrarySystem.APIs.Controllers
@@ -13,8 +12,8 @@ namespace LibrarySystem.APIs.Controllers
         private readonly IBorrowingManager _borrowingManager;
 
         public BorrowController(IBorrowingManager borrowingManager)
-        { 
-            _borrowingManager= borrowingManager;
+        {
+            _borrowingManager = borrowingManager;
         }
 
         [HttpGet]
@@ -27,12 +26,21 @@ namespace LibrarySystem.APIs.Controllers
 
         public ActionResult Add(BorrowAddDto borrowAddDto)
         {
-           var isAdded= _borrowingManager.Borrow(borrowAddDto);
+            var isAdded = _borrowingManager.Borrow(borrowAddDto);
             if (!isAdded)
             {
                 return NotFound();
             }
-            return Ok("Was Added Successfully");
+            return Ok(new GeneralResponse("was Added"));
+        }
+
+
+        [HttpPost]
+        [Route("Close/{borrowingId}")]
+        public ActionResult Post(int borrowingId)
+        {
+            _borrowingManager.CloseBorrwoing(borrowingId);
+            return NoContent();
         }
     }
 }

@@ -1,65 +1,49 @@
 ﻿using LibrarySystem.APIs.DAL;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace LibrarySystem.DAL;
 
-public class BorrowingRepo:IBorrowingRepo
+public class BorrowingRepo : IBorrowingRepo
 {
     private readonly SystemContext _context;
 
-    public BorrowingRepo(SystemContext context )
+    public BorrowingRepo(SystemContext context)
     {
         _context = context;
     }
 
     public void Add(Borrowing borrowing)
     {
-        _context.Borrow.Add(borrowing);
+        _context.Borrows.Add(borrowing);
     }
 
     public void Delete(Borrowing borrowing)
     {
-        _context.Borrow.Remove(borrowing);
+        _context.Borrows.Remove(borrowing);
     }
 
-    public IEnumerable<Borrowing> GetAll()
+    public IEnumerable<Borrowing> GetPendingWithBooks()
     {
-        return _context.Borrow;
+        return _context.Borrows
+            .Include(b => b.Book)
+            .Where(b => !b.IsRetrieved)
+            .AsNoTracking();
     }
 
-    public int GetNumberOfCopies(int bookCode)
+    public Borrowing? GetWithBookById(int id)
     {
-        int numberOfCopies = _context.Books
-            .Where(b => b.Code == bookCode)
-            .Select(b => b.NumOfCopies)
-            .SingleOrDefault();
-
-        return numberOfCopies;
+        return _context.Set<Borrowing>()
+            .Include(b => b.Book)
+            .FirstOrDefault(b => b.BorrowingId == id);
     }
 
-    public void DecreaseBookCopies(int bookCode, int numOfCopies)
+    public void Update()
     {
-        var book = _context.Books.FirstOrDefault(b => b.Code == bookCode);
-        if (book != null)
-        {
-            book.NumOfCopies -= numOfCopies;
-            _context.SaveChanges();
-        }
     }
-
 
     public int SaveChanges()
     {
-       return _context.SaveChanges();
+        return _context.SaveChanges();
 
-    }
-
-    public int GetNumberOfCopies(Borrowing borrowing)
-    {
-        throw new NotImplementedException();
     }
 }

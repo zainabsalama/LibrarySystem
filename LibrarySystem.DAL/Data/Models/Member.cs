@@ -7,6 +7,4 @@ public class Member
     public int Code { get; set; }
 
     public string Name { get; set; } = string.Empty;
-
-   
 }

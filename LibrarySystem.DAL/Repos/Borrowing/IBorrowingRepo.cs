@@ -1,19 +1,11 @@
-﻿using LibrarySystem.APIs.DAL;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LibrarySystem.DAL;
+﻿namespace LibrarySystem.DAL;
 
 public interface IBorrowingRepo
 {
-    IEnumerable<Borrowing> GetAll();
+    IEnumerable<Borrowing> GetPendingWithBooks();
+    Borrowing? GetWithBookById(int id);
     void Add(Borrowing borrowing);
     void Delete(Borrowing borrowing);
-    void DecreaseBookCopies(int bookCode, int numOfCopies);
-    int GetNumberOfCopies(int bookCode);
+    void Update();
     int SaveChanges();
-
 }
